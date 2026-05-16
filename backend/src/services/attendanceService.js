@@ -59,10 +59,27 @@ const attendanceService = {
         [studentId, session_id]
       );
 
+      const attendanceRecord = rows[0];
+
+      // 4. REALTIME NOTIFICATION (Phase 7)
+      // Fetch student info to include in the realtime broadcast
+      const studentInfo = await pool.query('SELECT name, roll_no FROM students WHERE id = $1', [studentId]);
+      
+      const { realtimeEmitter } = require('../realtime/emitter'); // Using object destructuring to match how it might be exported or required
+      // Wait, let's check how I exported it. I used module.exports = realtimeEmitter;
+      const emitter = require('../realtime/emitter');
+      
+      emitter.notifyAttendanceMarked(session_id, {
+        id: attendanceRecord.id,
+        name: studentInfo.rows[0].name,
+        roll_no: studentInfo.rows[0].roll_no,
+        recorded_at: attendanceRecord.recorded_at
+      });
+
       return {
         success: true,
         message: 'Attendance successfully marked.',
-        data: rows[0]
+        data: attendanceRecord
       };
       
     } catch (error) {

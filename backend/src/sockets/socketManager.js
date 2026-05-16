@@ -1,25 +1,54 @@
 const { Server } = require('socket.io');
+const jwt = require('jsonwebtoken');
+const env = require('../config/env');
 
 let io;
 
 const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: 'http://localhost:5173',
+      origin: env.NODE_ENV === 'production' ? process.env.CLIENT_URL : 'http://localhost:5173',
       credentials: true
+    },
+    pingTimeout: 60000,
+    pingInterval: 25000
+  });
+
+  // Enterprise Middleware: JWT Authentication
+  io.use((socket, next) => {
+    const token = socket.handshake.auth.token;
+    
+    if (!token) {
+      return next(new Error('Authentication error: No token provided'));
+    }
+
+    try {
+      const decoded = jwt.verify(token, env.JWT_SECRET);
+      socket.user = decoded; // Attach user info (id, email, role)
+      next();
+    } catch (err) {
+      return next(new Error('Authentication error: Invalid token'));
     }
   });
 
   io.on('connection', (socket) => {
-    console.log(`🔌 New client connected: ${socket.id}`);
+    console.log(`🔌 Secure connection established: ${socket.id} (User: ${socket.user.email})`);
 
+    // Faculty only joining for session rooms
     socket.on('join_session', (sessionId) => {
-      socket.join(`session_${sessionId}`);
-      console.log(`👤 Socket ${socket.id} joined session_${sessionId}`);
+      // Security: Only allow faculty/admins to join session rooms for monitoring
+      if (socket.user.role !== 'faculty' && socket.user.role !== 'admin') {
+        console.warn(`🚨 Unauthorized room join attempt by ${socket.user.email}`);
+        return;
+      }
+
+      const room = `session_${sessionId}`;
+      socket.join(room);
+      console.log(`👤 Faculty ${socket.user.email} is now monitoring room: ${room}`);
     });
 
-    socket.on('disconnect', () => {
-      console.log('🔌 Client disconnected');
+    socket.on('disconnect', (reason) => {
+      console.log(`🔌 Client disconnected: ${socket.id} (Reason: ${reason})`);
     });
   });
 

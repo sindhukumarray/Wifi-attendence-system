@@ -10,6 +10,7 @@ import DashboardPage from './pages/DashboardPage';
 import StudentDashboard from './pages/student/StudentDashboard';
 import AttendanceHistory from './pages/student/AttendanceHistory';
 import RegisteredDevices from './pages/student/RegisteredDevices';
+import StudentAnalytics from './pages/student/StudentAnalytics';
 import StudentProfile from './pages/student/StudentProfile';
 import FacultyDashboard from './pages/faculty/FacultyDashboard';
 import ActiveSession from './pages/faculty/ActiveSession';
@@ -112,6 +113,7 @@ function App() {
 
               {/* Student Only Routes */}
               <Route path="/student/dashboard" element={<StudentDashboard />} />
+              <Route path="/student/analytics" element={<StudentAnalytics />} />
               <Route path="/student/attendance" element={<AttendanceHistory />} />
               <Route path="/student/devices" element={<RegisteredDevices />} />
               <Route path="/student/profile" element={<StudentProfile />} />
