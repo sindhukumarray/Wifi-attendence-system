@@ -6,10 +6,8 @@ import Navbar from '../../components/dashboard/Navbar';
 import FacultySkeleton from '../../components/faculty/FacultySkeleton';
 
 const StudentsPage = () => {
-  const { loading, students, fetchStudents, createRecord, deleteRecord } = useAdmin();
+  const { loading, students, fetchStudents, deleteRecord } = useAdmin();
   const [searchTerm, setSearchTerm] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', password: '', roll_no: '' });
 
   useEffect(() => {
     fetchStudents();
@@ -20,16 +18,6 @@ const StudentsPage = () => {
     s.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     s.roll_no?.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    const success = await createRecord('student', form);
-    if (success) {
-      setShowModal(false);
-      setForm({ name: '', email: '', password: '', roll_no: '' });
-      fetchStudents();
-    }
-  };
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to remove this student?')) {
@@ -44,15 +32,8 @@ const StudentsPage = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <h1 className="text-3xl font-black text-slate-900 tracking-tight">Student Management</h1>
-            <p className="text-slate-500 font-medium mt-1">Manage all registered student accounts</p>
+            <p className="text-slate-500 font-medium mt-1">View and manage registered student accounts</p>
           </div>
-          <button
-            onClick={() => setShowModal(true)}
-            className="px-8 py-4 bg-brand-600 text-white font-black rounded-2xl hover:bg-brand-700 transition-all flex items-center gap-2 shadow-xl shadow-brand-600/20"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"></path></svg>
-            Add New Student
-          </button>
         </div>
 
         {/* Search */}
@@ -117,42 +98,9 @@ const StudentsPage = () => {
           </div>
         )}
       </div>
-
-      {/* Add Student Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-[2rem] p-10 w-full max-w-lg shadow-2xl">
-            <h2 className="text-2xl font-black text-slate-900 mb-2">Add New Student</h2>
-            <p className="text-slate-500 font-medium text-sm mb-8">Create a new student account</p>
-            <form onSubmit={handleCreate} className="space-y-5">
-              <div>
-                <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Full Name</label>
-                <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-medium" placeholder="John Doe" />
-              </div>
-              <div>
-                <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Roll Number</label>
-                <input type="text" required value={form.roll_no} onChange={(e) => setForm({ ...form, roll_no: e.target.value })} className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-medium" placeholder="CS2024-001" />
-              </div>
-              <div>
-                <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Email Address</label>
-                <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-medium" placeholder="student@college.com" />
-              </div>
-              <div>
-                <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Password</label>
-                <input type="password" required minLength={6} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-medium" placeholder="••••••••" />
-              </div>
-              <div className="flex gap-4 pt-4">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-4 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-all">Cancel</button>
-                <button type="submit" disabled={loading} className="flex-1 py-4 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition-all shadow-lg shadow-brand-600/20">
-                  {loading ? 'Creating...' : 'Create Student'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </DashboardLayout>
   );
 };
 
 export default StudentsPage;
+
