@@ -26,6 +26,7 @@ app.use('/api/students', require('./routes/studentRoutes'));
 app.use('/api/faculty', require('./routes/facultyRoutes'));
 app.use('/api/attendance', require('./routes/attendanceRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/analytics', require('./routes/analyticsRoutes'));
 
 // Global Error Handler
 app.use(errorHandler);
