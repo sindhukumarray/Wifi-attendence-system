@@ -45,6 +45,21 @@ const StudentAnalytics = () => {
 
   const stats = dashboardData?.attendance_percentage || {};
 
+  const downloadReport = () => {
+    // Generate simple CSV for the demo
+    const headers = "Subject,Attendance%\n";
+    const rows = chartData.subjects.map(s => `${s.name},${s.value}%`).join('\n');
+    const blob = new Blob([headers + rows], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('hidden', '');
+    a.setAttribute('href', url);
+    a.setAttribute('download', `Attendance_Report_${new Date().toLocaleDateString()}.csv`);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   return (
     <DashboardLayout sidebar={<Sidebar />} navbar={<Navbar />}>
       <div className="space-y-10 animate-fade-in p-6 lg:p-10">
@@ -53,7 +68,6 @@ const StudentAnalytics = () => {
             <h1 className="text-3xl font-black text-slate-900 tracking-tight">Personal Analytics</h1>
             <p className="text-slate-500 font-medium mt-1">Deep dive into your academic presence</p>
           </div>
-          <Badge variant="primary" className="py-2 px-6 rounded-2xl text-sm font-black uppercase">Phase 7: Advanced Visualization</Badge>
         </div>
 
         {/* Stats Grid */}
@@ -112,7 +126,10 @@ const StudentAnalytics = () => {
                  ? `You are currently ${75 - stats.percentage}% below the required threshold. Attend the next 5 sessions consecutively to regain eligibility.`
                  : "Excellent! You are well above the 75% requirement. Keep up this consistency to maintain your academic standing."}
              </p>
-             <button className="mt-8 px-8 py-4 bg-white text-slate-900 font-black rounded-2xl w-fit hover:scale-105 transition-all relative z-10">
+             <button 
+                onClick={downloadReport}
+                className="mt-8 px-8 py-4 bg-white text-slate-900 font-black rounded-2xl w-fit hover:scale-105 transition-all relative z-10"
+             >
                Download Full Report
              </button>
           </div>
