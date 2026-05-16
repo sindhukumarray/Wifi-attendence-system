@@ -3,7 +3,18 @@ const cors = require('cors');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const loggerMiddleware = require('./middleware/loggerMiddleware');
 
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const hpp = require('hpp');
+const { globalLimiter } = require('./security/securityConfig');
+
 const app = express();
+
+// Security Middleware
+app.use(helmet());
+app.use(xss());
+app.use(hpp());
+app.use('/api', globalLimiter);
 
 // Middlewares
 app.use(loggerMiddleware);
@@ -11,8 +22,8 @@ app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 // Basic route for testing
 app.get('/', (req, res) => {
