@@ -1,5 +1,5 @@
 const analyticsService = require('../services/analyticsService');
-const { sendSuccess, sendError } = require('../utils/responseHelper');
+const { sendSuccess, sendError } = require('../utils/response');
 
 const analyticsController = {
   /**

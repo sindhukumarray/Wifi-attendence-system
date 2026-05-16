@@ -2,20 +2,20 @@ const express = require('express');
 const router = express.Router();
 const analyticsController = require('../controllers/analyticsController');
 const { protect } = require('../middleware/authMiddleware');
-const { restrictTo } = require('../middleware/roleMiddleware');
+const authorizeRoles = require('../middleware/roleMiddleware');
 
 // Student Analytics
 router.get(
   '/student', 
   protect, 
-  restrictTo('student'), 
+  authorizeRoles('student'), 
   analyticsController.getStudentDashboard
 );
 
 router.get(
   '/student/export', 
   protect, 
-  restrictTo('student'), 
+  authorizeRoles('student'), 
   analyticsController.exportAttendanceReport
 );
 
@@ -23,7 +23,7 @@ router.get(
 router.get(
   '/faculty', 
   protect, 
-  restrictTo('faculty', 'admin'), 
+  authorizeRoles('faculty', 'admin'), 
   analyticsController.getFacultyDashboard
 );
 
