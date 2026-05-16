@@ -1,11 +1,6 @@
 import React from 'react';
 
-const AttendanceTable = () => {
-  const dummyData = [
-    { id: 1, name: 'Alice Smith', mac: '00:1A:2B:3C', status: 'Present', time: '08:45 AM' },
-    { id: 2, name: 'Bob Johnson', mac: 'AA:BB:CC:DD', status: 'Absent', time: '-' },
-  ];
-
+const AttendanceTable = ({ data = [] }) => {
   return (
     <div className="overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-100">
       <table className="min-w-full text-left text-sm whitespace-nowrap">
@@ -18,20 +13,30 @@ const AttendanceTable = () => {
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
-          {dummyData.map((row) => (
-            <tr key={row.id} className="hover:bg-blue-50/60 cursor-pointer transition-all duration-200 group">
-              <td className="px-6 py-4 font-semibold text-slate-800 group-hover:text-blue-700 transition-colors">{row.name}</td>
-              <td className="px-6 py-4 text-slate-500 font-mono text-xs">{row.mac}</td>
-              <td className="px-6 py-4">
-                <span className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide shadow-sm transition-transform duration-300 group-hover:scale-105 inline-block ${
-                  row.status === 'Present' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200'
-                }`}>
-                  {row.status}
-                </span>
+          {data.length > 0 ? (
+            data.map((row) => (
+              <tr key={row.id} className="hover:bg-blue-50/60 cursor-pointer transition-all duration-200 group">
+                <td className="px-6 py-4 font-semibold text-slate-800 group-hover:text-blue-700 transition-colors">{row.student_name}</td>
+                <td className="px-6 py-4 text-slate-500 font-mono text-xs">{row.mac || 'N/A'}</td>
+                <td className="px-6 py-4">
+                  <span className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide shadow-sm transition-transform duration-300 group-hover:scale-105 inline-block ${
+                    row.status?.toLowerCase() === 'present' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200'
+                  }`}>
+                    {row.status || 'Present'}
+                  </span>
+                </td>
+                <td className="px-6 py-4 text-slate-500 font-medium">
+                  {row.time ? new Date(row.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-'}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4" className="px-6 py-8 text-center text-slate-400 font-medium">
+                No recent activity found.
               </td>
-              <td className="px-6 py-4 text-slate-500 font-medium">{row.time}</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

@@ -22,6 +22,10 @@ import { AuthProvider } from './context/AuthContext';
 import { SocketProvider } from './context/SocketContext';
 import ProtectedRoute from './routes/ProtectedRoute';
 
+import StudentsPage from './pages/admin/StudentsPage';
+import FacultyPage from './pages/admin/FacultyPage';
+import SettingsPage from './pages/admin/SettingsPage';
+
 // Placeholder Page Component
 const PlaceholderPage = ({ title }) => (
   <DashboardLayout sidebar={<Sidebar />} navbar={<Navbar />}>
@@ -96,9 +100,9 @@ function App() {
               
               {/* Admin Only Routes (Role-guarded inside DashboardPage or Layout later) */}
               <Route path="/admin/dashboard" element={<DashboardPage />} />
-              <Route path="/students" element={<PlaceholderPage title="Manage Students" />} />
-              <Route path="/faculty" element={<PlaceholderPage title="Manage Faculty" />} />
-              <Route path="/settings" element={<PlaceholderPage title="System Settings" />} />
+              <Route path="/students" element={<StudentsPage />} />
+              <Route path="/faculty" element={<FacultyPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
 
               {/* Faculty Only Routes */}
               <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
