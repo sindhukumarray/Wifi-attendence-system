@@ -127,11 +127,16 @@ const createTables = async () => {
       );
     `);
 
-    // Indexes
+    // Indexes (Phase 6 Optimized)
     await client.query(`CREATE INDEX IF NOT EXISTS idx_student_email ON students(email);`);
-    await client.query(`CREATE INDEX IF NOT EXISTS idx_mac_address ON devices(mac_address);`);
-    await client.query(`CREATE INDEX IF NOT EXISTS idx_session_active ON sessions(is_active);`);
-    await client.query(`CREATE INDEX IF NOT EXISTS idx_attendance_session ON attendance(session_id);`);
+    await client.query(`CREATE INDEX IF NOT EXISTS idx_device_mac ON devices(mac_address);`);
+    await client.query(`CREATE INDEX IF NOT EXISTS idx_device_lookup ON devices(student_id, mac_address);`);
+    
+    // Partial index for ultra-fast active session lookup by classroom
+    await client.query(`CREATE INDEX IF NOT EXISTS idx_sessions_active ON sessions(classroom_id) WHERE is_active = true;`);
+    
+    // O(1) duplicate lookup index
+    await client.query(`CREATE INDEX IF NOT EXISTS idx_attendance_student_session ON attendance(student_id, session_id);`);
 
     await client.query('COMMIT');
     console.log('✅ All tables and indexes successfully created in NeonDB!');

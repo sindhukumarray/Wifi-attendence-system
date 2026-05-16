@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import socketService from '../sockets/socketService';
 import useAuth from '../hooks/useAuth';
+import { SOCKET_EVENTS } from '../utils/socketEvents';
 
-const SocketContext = createContext();
+const SocketContext = createContext(null);
 
 export const SocketProvider = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -10,18 +11,35 @@ export const SocketProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
+    // Only connect if the user is fully authenticated
     if (isAuthenticated) {
-      const s = socketService.connect();
-      setSocket(s);
+      const socketInstance = socketService.connect();
+      
+      if (socketInstance) {
+        setSocket(socketInstance);
+        setIsConnected(socketInstance.connected);
 
-      s.on('connect', () => setIsConnected(true));
-      s.on('disconnect', () => setIsConnected(false));
+        // Bind connection state listeners
+        const onConnect = () => setIsConnected(true);
+        const onDisconnect = () => setIsConnected(false);
 
-      return () => {
-        socketService.disconnect();
-        setSocket(null);
-        setIsConnected(false);
-      };
+        socketInstance.on(SOCKET_EVENTS.CONNECT, onConnect);
+        socketInstance.on(SOCKET_EVENTS.DISCONNECT, onDisconnect);
+
+        // Cleanup on unmount or authentication loss
+        return () => {
+          socketInstance.off(SOCKET_EVENTS.CONNECT, onConnect);
+          socketInstance.off(SOCKET_EVENTS.DISCONNECT, onDisconnect);
+          socketService.disconnect();
+          setSocket(null);
+          setIsConnected(false);
+        };
+      }
+    } else {
+      // If user logs out, disconnect socket
+      socketService.disconnect();
+      setSocket(null);
+      setIsConnected(false);
     }
   }, [isAuthenticated]);
 
@@ -32,10 +50,10 @@ export const SocketProvider = ({ children }) => {
   );
 };
 
-export const useSocket = () => {
+export const useSocketContext = () => {
   const context = useContext(SocketContext);
-  if (!context) {
-    throw new Error('useSocket must be used within a SocketProvider');
+  if (context === null) {
+    throw new Error('useSocketContext must be used within a SocketProvider');
   }
   return context;
 };

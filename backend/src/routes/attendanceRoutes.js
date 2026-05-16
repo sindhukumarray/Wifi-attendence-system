@@ -1,23 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const attendanceController = require('../controllers/attendanceController');
+const { protect } = require('../middleware/authMiddleware');
+const authorizeRoles = require('../middleware/roleMiddleware');
 
-// Basic Security Middleware for Scanners
-const verifyScanner = (req, res, next) => {
-  const scannerKey = req.headers['x-scanner-key'];
-  const masterKey = process.env.SCANNER_MASTER_KEY || 'wifi_attend_secret_2024';
+// 1. Mark Attendance (Student Only)
+router.post(
+  '/mark',
+  protect,
+  authorizeRoles('student'),
+  attendanceController.markAttendance
+);
 
-  if (!scannerKey || scannerKey !== masterKey) {
-    return res.status(403).json({ success: false, message: 'Unauthorized scanner access' });
-  }
-  next();
-};
+// 2. View Student's own attendance history (Student Only)
+router.get(
+  '/student',
+  protect,
+  authorizeRoles('student'),
+  attendanceController.getStudentAttendance
+);
 
-/**
- * @route POST /api/attendance/detect
- * @desc Receive MAC addresses from Wi-Fi scanner
- * @access Private (Scanner Key Required)
- */
-router.post('/detect', verifyScanner, attendanceController.markPresence);
+// 3. View Session Attendance (Faculty / Admin)
+router.get(
+  '/session/:id',
+  protect,
+  authorizeRoles('faculty', 'admin'),
+  attendanceController.getSessionAttendance
+);
 
 module.exports = router;
