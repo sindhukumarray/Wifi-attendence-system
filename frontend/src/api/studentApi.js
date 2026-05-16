@@ -13,6 +13,7 @@ const studentApi = {
   // Attendance
   getAttendance: () => api.get('/students/attendance'),
   getAttendancePercentage: () => api.get('/students/attendance-percentage'),
+  markAttendance: (data) => api.post('/attendance/mark', data),
 
   // Combined Dashboard
   getDashboard: () => api.get('/students/dashboard')

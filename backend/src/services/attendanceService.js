@@ -13,21 +13,31 @@ const attendanceService = {
     try {
       // 1. Extract and sanitize network data
       const networkData = wifiScannerService.extractNetworkData(rawRequest);
-      const { session_id, classroom_id } = rawRequest.body;
+      let { session_id, classroom_id } = rawRequest.body;
 
+      // If session_id is missing, try to find an active session in the current classroom (via SSID)
       if (!session_id || !classroom_id) {
-        throw new ValidationException('MISSING_DATA', 'Session ID and Classroom ID are required', 400);
+        const activeLookup = await pool.query(
+          `SELECT s.id as session_id, c.id as classroom_id 
+           FROM sessions s
+           JOIN classrooms c ON s.classroom_id = c.id
+           WHERE c.wifi_ssid = $1 AND s.is_active = true
+           LIMIT 1`,
+          [networkData.currentSsid]
+        );
+
+        if (activeLookup.rows.length === 0) {
+          throw new ValidationException('NO_ACTIVE_SESSION', `No active session found for Wi-Fi: ${networkData.currentSsid}`, 404);
+        }
+
+        session_id = activeLookup.rows[0].session_id;
+        classroom_id = activeLookup.rows[0].classroom_id;
       }
 
       // 2. Execute Validation Pipeline (Fast-Fail)
       
       // Step A: Validate Active Session
       const session = await validationService.verifyActiveSession(session_id);
-
-      // Verify the session actually belongs to the claimed classroom
-      if (session.classroom_id !== parseInt(classroom_id, 10)) {
-        throw new ValidationException('SESSION_MISMATCH', 'The active session does not match this classroom.', 400);
-      }
 
       // Step B: Validate Device Binding
       await validationService.verifyStudentDevice(studentId, networkData.macAddress);

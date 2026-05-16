@@ -10,7 +10,7 @@ const registerController = async (req, res) => {
     }, 201);
   } catch (error) {
     // If it's our custom thrown error, send it as 400 Bad Request
-    return sendError(res, error.message, 400);
+    return sendError(res, error.message, null, 400);
   }
 };
 
@@ -28,7 +28,7 @@ const loginController = async (req, res) => {
       }
     });
   } catch (error) {
-    return sendError(res, error.message, 401);
+    return sendError(res, error.message, null, 401);
   }
 };
 

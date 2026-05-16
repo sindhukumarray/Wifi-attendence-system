@@ -9,8 +9,10 @@ import AttendanceChart from '../../components/student/AttendanceChart';
 import SkeletonLoader from '../../components/student/SkeletonLoader';
 import Badge from '../../components/common/Badge';
 
+import PresenceSyncCard from '../../components/student/PresenceSyncCard';
+
 const StudentDashboard = () => {
-  const { loading, dashboardData, fetchDashboard } = useStudent();
+  const { loading, dashboardData, fetchDashboard, markAttendance, autoMarkAttendance } = useStudent();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,7 +30,7 @@ const StudentDashboard = () => {
     );
   }
 
-  const { attendance_percentage, recent_attendance, profile } = dashboardData || {};
+  const { attendance_percentage, recent_attendance, registered_devices } = dashboardData || {};
 
   return (
     <DashboardLayout sidebar={<Sidebar />} navbar={<Navbar />}>
@@ -43,6 +45,15 @@ const StudentDashboard = () => {
             <Badge variant="primary" className="py-2 px-4 rounded-xl">Academic Year 2024-25</Badge>
           </div>
         </div>
+
+        {/* Zero-Touch Presence Sync Section */}
+        <PresenceSyncCard 
+          devices={registered_devices} 
+          onMarkAttendance={markAttendance}
+          onAutoMark={autoMarkAttendance}
+        />
+
+
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

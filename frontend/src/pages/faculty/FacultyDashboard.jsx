@@ -49,6 +49,35 @@ const FacultyDashboard = () => {
   return (
     <DashboardLayout sidebar={<Sidebar />} navbar={<Navbar />}>
       <main className="p-6 lg:p-10 space-y-10 animate-fade-in">
+        {/* Smart Insight Bar */}
+        <div className="bg-gradient-to-r from-brand-600 to-brand-800 rounded-[2rem] p-8 text-white shadow-2xl shadow-brand-600/20 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-[80px] -mr-32 -mt-32 rounded-full group-hover:bg-white/20 transition-all duration-700"></div>
+          
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex items-center gap-6">
+              <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-black tracking-tight">Smart Suggestion</h3>
+                <p className="text-brand-100 font-medium">
+                  {activeSession 
+                    ? `You are currently teaching ${activeSession.subject_name}. 12 students verified.` 
+                    : "It's 10:00 AM. Usually, you teach 'Web Development' now. Want to start?"}
+                </p>
+              </div>
+            </div>
+            {!activeSession && (
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="px-6 py-3 bg-white text-brand-600 font-black rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg"
+              >
+                Quick Start
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
@@ -65,6 +94,7 @@ const FacultyDashboard = () => {
             </button>
           )}
         </div>
+
 
         {/* Active Session Notification */}
         {activeSession && (

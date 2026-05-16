@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 import { SOCKET_EVENTS } from '../utils/socketEvents';
-import { getToken } from '../utils/tokenHelper';
+import { getAuthToken } from '../utils/tokenHelper';
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
 
@@ -18,7 +18,7 @@ class SocketService {
       return this.socket;
     }
 
-    const token = getToken();
+    const token = getAuthToken();
 
     if (!token) {
       console.warn('Socket connection aborted: No auth token found.');

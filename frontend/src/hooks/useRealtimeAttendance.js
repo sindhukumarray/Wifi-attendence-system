@@ -10,8 +10,9 @@ import toast from 'react-hot-toast';
  */
 const useRealtimeAttendance = (sessionId, initialData = []) => {
   const { socket, isConnected } = useSocket();
-  const [attendanceList, setAttendanceList] = useState(initialData);
-  const [totalCount, setTotalCount] = useState(initialData.length);
+  const [attendanceList, setAttendanceList] = useState(Array.isArray(initialData) ? initialData : []);
+  const [totalCount, setTotalCount] = useState(Array.isArray(initialData) ? initialData.length : 0);
+
 
   // Sync state if initialData is fetched asynchronously
   useEffect(() => {

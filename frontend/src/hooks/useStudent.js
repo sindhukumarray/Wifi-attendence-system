@@ -94,6 +94,45 @@ const useStudent = () => {
     }
   };
 
+  const markAttendance = async (data) => {
+    setLoading(true);
+    try {
+      const response = await studentApi.markAttendance(data);
+      if (response.data.success) {
+        toast.success(response.data.message || 'Attendance marked successfully!');
+        fetchDashboard(); // Refresh stats
+        return { success: true, message: response.data.message };
+      }
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Failed to mark attendance';
+      if (err.response?.status !== 409) { // Don't toast if already marked (idempotency)
+        toast.error(msg);
+      }
+      return { success: false, message: msg, alreadyMarked: err.response?.status === 409 };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const autoMarkAttendance = useCallback(async (devices) => {
+    if (!devices || devices.length === 0) return;
+    
+    // In Zero-Touch mode, we use the primary device
+    // and try to detect the network. For web demo, we'll 
+    // simulate detection.
+    const primaryDevice = devices[0];
+    
+    // Check if we have a "simulated" SSID in session storage 
+    // (set by faculty during demo for testing)
+    const simulatedSsid = sessionStorage.getItem('detected_ssid');
+    if (!simulatedSsid) return;
+
+    return await markAttendance({
+      mac_address: primaryDevice.mac_address,
+      current_ssid: simulatedSsid
+    });
+  }, []);
+
   return {
     loading,
     error,
@@ -105,7 +144,9 @@ const useStudent = () => {
     fetchDevices,
     registerDevice,
     deleteDevice,
-    updateProfile
+    updateProfile,
+    markAttendance,
+    autoMarkAttendance
   };
 };
 
