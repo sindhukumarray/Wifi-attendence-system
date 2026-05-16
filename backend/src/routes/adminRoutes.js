@@ -8,13 +8,18 @@ const authorizeRoles = require('../middleware/roleMiddleware');
 router.use(protect);
 router.use(authorizeRoles('admin'));
 
-// Dashboard route
+// Dashboard
 router.get('/dashboard', adminController.getDashboard);
+router.get('/stats', adminController.getDashboard);
 
-// Students routes
+// Students CRUD
 router.get('/students', adminController.getStudents);
+router.post('/students', adminController.createStudent);
+router.delete('/students/:id', adminController.deleteStudent);
 
-// Faculty routes
+// Faculty CRUD
 router.get('/faculty', adminController.getFaculty);
+router.post('/faculty', adminController.createFaculty);
+router.delete('/faculty/:id', adminController.deleteFaculty);
 
 module.exports = router;
