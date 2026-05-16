@@ -5,7 +5,7 @@ const loggerMiddleware = require('./middleware/loggerMiddleware');
 
 const helmet = require('helmet');
 const xss = require('xss-clean');
-const hpp = require('hpp');
+
 const { globalLimiter } = require('./security/securityConfig');
 
 const app = express();
@@ -13,7 +13,7 @@ const app = express();
 // Security Middleware
 app.use(helmet());
 app.use(xss());
-app.use(hpp());
+
 app.use('/api', globalLimiter);
 
 // Middlewares
