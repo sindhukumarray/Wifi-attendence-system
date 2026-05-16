@@ -15,8 +15,7 @@ const AttendanceCard = ({ title, count, colorClass, icon, trend }) => {
       </div>
       <h4 className="text-slate-500 text-sm font-semibold tracking-tight mb-1">{title}</h4>
       <div className="flex items-baseline gap-2">
-        <p className="text-4xl font-black text-slate-800 tracking-tight">{count}</p>
-        <span className="text-slate-400 text-xs font-medium">this week</span>
+        <p className="text-4xl font-black text-slate-800 tracking-tight">{count ?? '—'}</p>
       </div>
       
       {/* Background decoration */}

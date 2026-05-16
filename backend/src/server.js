@@ -6,6 +6,10 @@ const db = require('./config/db');
 // Database connection test can be done implicitly by db.js
 // Set up server
 const server = http.createServer(app);
+const { initSocket } = require('./sockets/socketManager');
+
+// Initialize Socket.io
+initSocket(server);
 
 const PORT = env.PORT || 5000;
 

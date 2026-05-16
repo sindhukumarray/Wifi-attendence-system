@@ -99,7 +99,7 @@ const useFaculty = () => {
     }
   }, []);
 
-  const fetchReports = async (filters) => {
+  const fetchReports = useCallback(async (filters = {}) => {
     setLoading(true);
     try {
       const response = await facultyApi.getReports(filters);
@@ -111,7 +111,7 @@ const useFaculty = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const updateProfile = async (data) => {
     setLoading(true);

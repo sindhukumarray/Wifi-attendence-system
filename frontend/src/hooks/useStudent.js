@@ -3,7 +3,7 @@ import studentApi from '../api/studentApi';
 import { toast } from 'react-hot-toast';
 
 const useStudent = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [attendance, setAttendance] = useState([]);

@@ -19,6 +19,7 @@ import DashboardLayout from './layouts/DashboardLayout';
 import Sidebar from './components/dashboard/Sidebar';
 import Navbar from './components/dashboard/Navbar';
 import { AuthProvider } from './context/AuthContext';
+import { SocketProvider } from './context/SocketContext';
 import ProtectedRoute from './routes/ProtectedRoute';
 
 // Placeholder Page Component
@@ -80,42 +81,44 @@ const IntegrationTest = () => {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/test" element={<IntegrationTest />} />
+      <SocketProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/test" element={<IntegrationTest />} />
 
-          {/* Protected Routes */}
-          <Route element={<ProtectedRoute />}>
-            {/* Shared Route */}
-            <Route path="/dashboard" element={<DashboardPage />} />
-            
-            {/* Admin Only Routes (Role-guarded inside DashboardPage or Layout later) */}
-            <Route path="/admin/dashboard" element={<DashboardPage />} />
-            <Route path="/students" element={<PlaceholderPage title="Manage Students" />} />
-            <Route path="/faculty" element={<PlaceholderPage title="Manage Faculty" />} />
-            <Route path="/settings" element={<PlaceholderPage title="System Settings" />} />
+            {/* Protected Routes */}
+            <Route element={<ProtectedRoute />}>
+              {/* Shared Route */}
+              <Route path="/dashboard" element={<DashboardPage />} />
+              
+              {/* Admin Only Routes (Role-guarded inside DashboardPage or Layout later) */}
+              <Route path="/admin/dashboard" element={<DashboardPage />} />
+              <Route path="/students" element={<PlaceholderPage title="Manage Students" />} />
+              <Route path="/faculty" element={<PlaceholderPage title="Manage Faculty" />} />
+              <Route path="/settings" element={<PlaceholderPage title="System Settings" />} />
 
-            {/* Faculty Only Routes */}
-            <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
-            <Route path="/faculty/session" element={<ActiveSession />} />
-            <Route path="/faculty/reports" element={<FacultyReports />} />
-            <Route path="/faculty/profile" element={<FacultyProfile />} />
+              {/* Faculty Only Routes */}
+              <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
+              <Route path="/faculty/session" element={<ActiveSession />} />
+              <Route path="/faculty/reports" element={<FacultyReports />} />
+              <Route path="/faculty/profile" element={<FacultyProfile />} />
 
-            {/* Student Only Routes */}
-            <Route path="/student/dashboard" element={<StudentDashboard />} />
-            <Route path="/student/attendance" element={<AttendanceHistory />} />
-            <Route path="/student/devices" element={<RegisteredDevices />} />
-            <Route path="/student/profile" element={<StudentProfile />} />
-            <Route path="/my-attendance" element={<AttendanceHistory />} />
-          </Route>
+              {/* Student Only Routes */}
+              <Route path="/student/dashboard" element={<StudentDashboard />} />
+              <Route path="/student/attendance" element={<AttendanceHistory />} />
+              <Route path="/student/devices" element={<RegisteredDevices />} />
+              <Route path="/student/profile" element={<StudentProfile />} />
+              <Route path="/my-attendance" element={<AttendanceHistory />} />
+            </Route>
 
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-        <Toaster position="top-right" />
-      </BrowserRouter>
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+          <Toaster position="top-right" />
+        </BrowserRouter>
+      </SocketProvider>
     </AuthProvider>
   );
 }

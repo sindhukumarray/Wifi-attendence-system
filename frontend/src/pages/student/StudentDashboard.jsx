@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useStudent from '../../hooks/useStudent';
 import DashboardLayout from '../../layouts/DashboardLayout';
 import Sidebar from '../../components/dashboard/Sidebar';
@@ -10,6 +11,7 @@ import Badge from '../../components/common/Badge';
 
 const StudentDashboard = () => {
   const { loading, dashboardData, fetchDashboard } = useStudent();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDashboard();
@@ -18,7 +20,7 @@ const StudentDashboard = () => {
   if (loading && !dashboardData) {
     return (
       <DashboardLayout sidebar={<Sidebar />} navbar={<Navbar />}>
-        <div className="p-6 lg:p-10 space-y-10">
+        <div className="space-y-10">
           <SkeletonLoader type="card" count={4} />
           <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm h-[450px] animate-pulse"></div>
         </div>
@@ -34,7 +36,7 @@ const StudentDashboard = () => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight">Academic Overview</h2>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight">Academic Overview</h1>
             <p className="text-slate-500 font-medium mt-1">Real-time attendance & session tracking</p>
           </div>
           <div className="flex items-center gap-3">
@@ -109,8 +111,11 @@ const StudentDashboard = () => {
                 </div>
               )}
             </div>
-            <button className="mt-8 w-full py-4 bg-slate-50 text-slate-600 font-bold rounded-2xl hover:bg-slate-100 transition-colors">
-              View All History
+            <button
+              onClick={() => navigate('/student/attendance')}
+              className="mt-8 w-full py-4 bg-slate-50 text-slate-600 font-bold rounded-2xl hover:bg-brand-50 hover:text-brand-600 transition-colors"
+            >
+              View All History →
             </button>
           </div>
         </div>
