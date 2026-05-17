@@ -149,15 +149,32 @@ const adminController = {
 
   createClassroom: async (req, res) => {
     try {
-      const { room_name, wifi_ssid, building_name } = req.body;
+      const { room_name, wifi_ssid, building_name, capacity } = req.body;
       if (!room_name || !wifi_ssid) {
         return res.status(400).json({ success: false, message: 'Room name and Wi-Fi SSID are required' });
       }
       const result = await pool.query(
-        'INSERT INTO classrooms (room_name, wifi_ssid, building_name) VALUES ($1, $2, $3) RETURNING id, room_name, wifi_ssid, building_name',
-        [room_name, wifi_ssid, building_name]
+        'INSERT INTO classrooms (room_name, wifi_ssid, building_name, capacity) VALUES ($1, $2, $3, $4) RETURNING id, room_name, wifi_ssid, building_name, capacity',
+        [room_name, wifi_ssid, building_name, capacity || 50]
       );
       res.status(201).json({ success: true, data: result.rows[0], message: 'Classroom created successfully' });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  updateClassroom: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { room_name, wifi_ssid, building_name, capacity } = req.body;
+      const result = await pool.query(
+        'UPDATE classrooms SET room_name = $1, wifi_ssid = $2, building_name = $3, capacity = $4 WHERE id = $5 RETURNING id, room_name, wifi_ssid, building_name, capacity',
+        [room_name, wifi_ssid, building_name, capacity, id]
+      );
+      if (result.rows.length === 0) {
+        return res.status(404).json({ success: false, message: 'Classroom not found' });
+      }
+      res.json({ success: true, data: result.rows[0], message: 'Classroom updated successfully' });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }

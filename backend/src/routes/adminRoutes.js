@@ -25,6 +25,7 @@ router.delete('/faculty/:id', adminController.deleteFaculty);
 // Classrooms CRUD
 router.get('/classrooms', adminController.getClassrooms);
 router.post('/classrooms', adminController.createClassroom);
+router.put('/classrooms/:id', adminController.updateClassroom);
 router.delete('/classrooms/:id', adminController.deleteClassroom);
 
 // Temporary Migration
