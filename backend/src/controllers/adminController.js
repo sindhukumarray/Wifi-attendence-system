@@ -136,6 +136,41 @@ const adminController = {
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
+  },
+
+  getClassrooms: async (req, res) => {
+    try {
+      const result = await pool.query('SELECT * FROM classrooms ORDER BY created_at DESC');
+      res.json({ success: true, data: result.rows });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  createClassroom: async (req, res) => {
+    try {
+      const { room_name, wifi_ssid, building_name } = req.body;
+      if (!room_name || !wifi_ssid) {
+        return res.status(400).json({ success: false, message: 'Room name and Wi-Fi SSID are required' });
+      }
+      const result = await pool.query(
+        'INSERT INTO classrooms (room_name, wifi_ssid, building_name) VALUES ($1, $2, $3) RETURNING id, room_name, wifi_ssid, building_name',
+        [room_name, wifi_ssid, building_name]
+      );
+      res.status(201).json({ success: true, data: result.rows[0], message: 'Classroom created successfully' });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  deleteClassroom: async (req, res) => {
+    try {
+      const { id } = req.params;
+      await pool.query('DELETE FROM classrooms WHERE id = $1', [id]);
+      res.json({ success: true, message: 'Classroom deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
   }
 };
 

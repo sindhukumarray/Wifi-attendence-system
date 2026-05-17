@@ -22,4 +22,9 @@ router.get('/faculty', adminController.getFaculty);
 router.post('/faculty', adminController.createFaculty);
 router.delete('/faculty/:id', adminController.deleteFaculty);
 
+// Classrooms CRUD
+router.get('/classrooms', adminController.getClassrooms);
+router.post('/classrooms', adminController.createClassroom);
+router.delete('/classrooms/:id', adminController.deleteClassroom);
+
 module.exports = router;
