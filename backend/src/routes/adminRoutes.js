@@ -27,4 +27,15 @@ router.get('/classrooms', adminController.getClassrooms);
 router.post('/classrooms', adminController.createClassroom);
 router.delete('/classrooms/:id', adminController.deleteClassroom);
 
+// Temporary Migration
+router.get('/migrate-capacity', async (req, res) => {
+  const pool = require('../config/db');
+  try {
+    await pool.query('ALTER TABLE classrooms ADD COLUMN IF NOT EXISTS capacity INT DEFAULT 50');
+    res.send('Migration successful: Added capacity column to classrooms');
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
 module.exports = router;
