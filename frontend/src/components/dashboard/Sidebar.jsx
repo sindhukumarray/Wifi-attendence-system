@@ -13,7 +13,7 @@ const Sidebar = () => {
     }`;
 
   return (
-    <aside className="w-72 bg-[#020617] text-white min-h-screen hidden md:flex flex-col flex-shrink-0 relative z-20 border-r border-slate-800/50">
+    <aside className="w-72 bg-[#020617] text-white min-h-screen flex flex-col flex-shrink-0 relative z-20 border-r border-slate-800/50">
       <div className="p-8 mb-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-brand-600 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-600/40">
