@@ -10,14 +10,14 @@ const adminController = {
       const facultyResult = await pool.query('SELECT COUNT(*) as total FROM faculty');
       const totalFaculty = parseInt(facultyResult.rows[0].total) || 0;
 
-      const activeSessionsResult = await pool.query("SELECT COUNT(*) as total FROM sessions WHERE status = 'active'");
+      const activeSessionsResult = await pool.query("SELECT COUNT(*) as total FROM sessions WHERE is_active = true");
       const activeSessions = parseInt(activeSessionsResult.rows[0].total) || 0;
 
       const presentTodayResult = await pool.query(`
         SELECT COUNT(DISTINCT a.student_id) as present_today
         FROM attendance a
         JOIN sessions s ON a.session_id = s.id
-        WHERE DATE(s.start_time) = CURRENT_DATE AND a.status = 'Present'
+        WHERE DATE(s.start_time) = CURRENT_DATE AND a.status = 'present'
       `);
       const presentToday = parseInt(presentTodayResult.rows[0].present_today) || 0;
 
