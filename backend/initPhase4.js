@@ -1,8 +1,9 @@
 const pool = require('./src/config/db');
 
 const initPhase4Db = async () => {
-  const client = await pool.connect();
+  let client;
   try {
+    client = await pool.connect();
     console.log('⏳ Initializing Phase 4 Database Schema...');
 
     // 1. Subjects Table
@@ -67,7 +68,7 @@ const initPhase4Db = async () => {
   } catch (error) {
     console.error('❌ Database Initialization Error:', error.message);
   } finally {
-    client.release();
+    if (client) client.release();
     process.exit();
   }
 };

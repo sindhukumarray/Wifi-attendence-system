@@ -1,8 +1,9 @@
 const pool = require('./src/config/db');
 
 const migrate = async () => {
-  const client = await pool.connect();
+  let client;
   try {
+    client = await pool.connect();
     console.log('⏳ Running Database Migration for Phase 4...');
     
     // 1. Add is_approved column to students if it doesn't exist
@@ -23,7 +24,7 @@ const migrate = async () => {
   } catch (err) {
     console.error('❌ Migration Error:', err.message);
   } finally {
-    client.release();
+    if (client) client.release();
     process.exit();
   }
 };

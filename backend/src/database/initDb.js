@@ -1,8 +1,9 @@
 const pool = require('../config/db');
 
 const createTables = async () => {
-  const client = await pool.connect();
+  let client;
   try {
+    client = await pool.connect();
     console.log('⏳ Starting Database Initialization...');
     
     await client.query('BEGIN');
@@ -144,7 +145,7 @@ const createTables = async () => {
     await client.query('ROLLBACK');
     console.error('❌ Error creating tables:', err.message);
   } finally {
-    client.release();
+    if (client) client.release();
     process.exit();
   }
 };

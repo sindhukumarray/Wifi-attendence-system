@@ -1,8 +1,9 @@
 const pool = require('./src/config/db');
 
 const fixSchema = async () => {
-  const client = await pool.connect();
+  let client;
   try {
+    client = await pool.connect();
     console.log('⏳ Fixing Database Schema...');
 
     // 1. Ensure Departments table exists
@@ -49,7 +50,7 @@ const fixSchema = async () => {
   } catch (error) {
     console.error('❌ Schema Fix Error:', error.message);
   } finally {
-    client.release();
+    if (client) client.release();
     process.exit();
   }
 };

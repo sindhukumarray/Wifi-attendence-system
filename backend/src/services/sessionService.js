@@ -25,8 +25,9 @@ const sessionService = {
    * @param {number} durationMinutes 
    */
   startSession: async (facultyId, classroomId, subjectId, durationMinutes = 60) => {
-    const client = await pool.connect();
+    let client;
     try {
+      client = await pool.connect();
       await client.query('BEGIN');
 
       // End any previously active sessions for this faculty or classroom
@@ -50,7 +51,7 @@ const sessionService = {
       await client.query('ROLLBACK');
       throw error;
     } finally {
-      client.release();
+      if (client) client.release();
     }
   },
 
