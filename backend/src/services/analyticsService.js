@@ -126,9 +126,9 @@ const analyticsService = {
       SELECT 
         COALESCE(d.department_name, 'Gen Ed') as name,
         (COUNT(CASE WHEN a.status = 'Present' THEN 1 END) * 100 / NULLIF(COUNT(*), 0)) as value
-      FROM subjects s
-      LEFT JOIN departments d ON s.department_id = d.id
-      LEFT JOIN sessions sess ON sess.subject_id = s.id
+      FROM sessions sess
+      LEFT JOIN faculty f ON sess.faculty_id = f.id
+      LEFT JOIN departments d ON f.department_id = d.id
       LEFT JOIN attendance a ON a.session_id = sess.id
       GROUP BY d.department_name
       LIMIT 4
