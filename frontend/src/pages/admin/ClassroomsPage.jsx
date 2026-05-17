@@ -7,9 +7,11 @@ import FacultySkeleton from '../../components/faculty/FacultySkeleton';
 import Badge from '../../components/common/Badge';
 
 const ClassroomsPage = () => {
-  const { loading, classrooms, fetchClassrooms, createRecord, deleteRecord } = useAdmin();
+  const { loading, classrooms, fetchClassrooms, createRecord, updateRecord, deleteRecord } = useAdmin();
   const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({ room_name: '', wifi_ssid: '', building_name: '' });
+  const [isEdit, setIsEdit] = useState(false);
+  const [currentRoomId, setCurrentRoomId] = useState(null);
+  const [form, setForm] = useState({ room_name: '', wifi_ssid: '', building_name: '', capacity: 50 });
 
   useEffect(() => {
     fetchClassrooms();
@@ -17,12 +19,32 @@ const ClassroomsPage = () => {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    const success = await createRecord('classroom', form);
+    let success;
+    if (isEdit) {
+      success = await updateRecord('classroom', currentRoomId, form);
+    } else {
+      success = await createRecord('classroom', form);
+    }
+    
     if (success) {
       setShowModal(false);
-      setForm({ room_name: '', wifi_ssid: '', building_name: '' });
+      setIsEdit(false);
+      setCurrentRoomId(null);
+      setForm({ room_name: '', wifi_ssid: '', building_name: '', capacity: 50 });
       fetchClassrooms();
     }
+  };
+
+  const handleEditClick = (room) => {
+    setIsEdit(true);
+    setCurrentRoomId(room.id);
+    setForm({ 
+      room_name: room.room_name, 
+      wifi_ssid: room.wifi_ssid, 
+      building_name: room.building_name || '',
+      capacity: room.capacity || 50
+    });
+    setShowModal(true);
   };
 
   const handleDelete = async (id) => {
@@ -79,7 +101,10 @@ const ClassroomsPage = () => {
                   </div>
 
                   <div className="mt-8 flex items-center justify-between gap-4 pt-6 border-t border-slate-50">
-                    <button className="flex-1 py-3 bg-slate-50 hover:bg-slate-100 rounded-xl font-bold text-slate-600 transition-all">
+                    <button 
+                      onClick={() => handleEditClick(room)}
+                      className="flex-1 py-3 bg-slate-50 hover:bg-slate-100 rounded-xl font-bold text-slate-600 transition-all"
+                    >
                       Edit Config
                     </button>
                     <button 
@@ -96,12 +121,12 @@ const ClassroomsPage = () => {
         )}
       </div>
 
-      {/* Add Classroom Modal */}
+      {/* Add/Edit Classroom Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-[2rem] p-10 w-full max-w-lg shadow-2xl">
-            <h2 className="text-2xl font-black text-slate-900 mb-2">Add New Classroom</h2>
-            <p className="text-slate-500 font-medium text-sm mb-8">Map a physical room to a Wi-Fi SSID</p>
+            <h2 className="text-2xl font-black text-slate-900 mb-2">{isEdit ? 'Edit Classroom' : 'Add New Classroom'}</h2>
+            <p className="text-slate-500 font-medium text-sm mb-8">{isEdit ? 'Update classroom configuration' : 'Map a physical room to a Wi-Fi SSID'}</p>
             <form onSubmit={handleCreate} className="space-y-5">
               <div>
                 <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Room Name</label>
@@ -115,10 +140,14 @@ const ClassroomsPage = () => {
                 <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Building Name</label>
                 <input type="text" value={form.building_name} onChange={(e) => setForm({ ...form, building_name: e.target.value })} className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-medium" placeholder="Main Block" />
               </div>
+              <div>
+                <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Capacity (Students)</label>
+                <input type="number" value={form.capacity} onChange={(e) => setForm({ ...form, capacity: parseInt(e.target.value) })} className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none font-medium" placeholder="50" />
+              </div>
               <div className="flex gap-4 pt-4">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-4 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-all">Cancel</button>
+                <button type="button" onClick={() => { setShowModal(false); setIsEdit(false); }} className="flex-1 py-4 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-all">Cancel</button>
                 <button type="submit" disabled={loading} className="flex-1 py-4 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition-all shadow-lg shadow-brand-600/20">
-                  {loading ? 'Creating...' : 'Create Room'}
+                  {loading ? 'Saving...' : (isEdit ? 'Save Changes' : 'Create Room')}
                 </button>
               </div>
             </form>

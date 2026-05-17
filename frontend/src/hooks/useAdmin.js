@@ -94,6 +94,26 @@ const useAdmin = () => {
     return false;
   };
 
+  const updateRecord = async (type, id, data) => {
+    try {
+      setLoading(true);
+      let res;
+      if (type === 'student') res = await adminApi.updateStudent(id, data);
+      else if (type === 'faculty') res = await adminApi.updateFaculty(id, data);
+      else if (type === 'classroom') res = await adminApi.updateClassroom(id, data);
+      
+      if (res.data.success) {
+        toast.success(`${type} updated successfully`);
+        return true;
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || `Failed to update ${type}`);
+    } finally {
+      setLoading(false);
+    }
+    return false;
+  };
+
   const deleteRecord = async (type, id) => {
     try {
       setLoading(true);
@@ -127,6 +147,7 @@ const useAdmin = () => {
     fetchFaculty,
     fetchClassrooms,
     createRecord,
+    updateRecord,
     deleteRecord
   };
 };
