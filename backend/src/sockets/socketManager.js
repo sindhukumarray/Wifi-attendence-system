@@ -4,10 +4,13 @@ const env = require('../config/env');
 
 let io;
 
+const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
+allowedOrigins.push('http://localhost:5173');
+
 const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : 'http://localhost:5173',
+      origin: allowedOrigins,
       credentials: true
     },
     pingTimeout: 60000,

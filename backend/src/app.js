@@ -16,8 +16,11 @@ app.use('/api', globalLimiter);
 
 // Middlewares
 app.use(loggerMiddleware);
+const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
+allowedOrigins.push('http://localhost:5173');
+
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : 'http://localhost:5173',
+  origin: allowedOrigins,
   credentials: true
 }));
 app.use(express.json({ limit: '10kb' }));
