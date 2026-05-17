@@ -6,6 +6,7 @@ import Navbar from '../../components/dashboard/Navbar';
 import StatCard from '../../components/analytics/StatCard';
 import { TrendChart, ComparisonBarChart } from '../../components/analytics/AnalyticsCharts';
 import Badge from '../../components/common/Badge';
+import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const { dashboardData, analyticsData, fetchDashboard, loading } = useAdmin();
@@ -38,25 +39,31 @@ const AdminDashboard = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <StatCard 
-            title="Total Students" 
-            value={stats.total_students} 
-            trend={12}
-            colorClass="blue"
-            icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>}
-          />
-          <StatCard 
-            title="Total Faculty" 
-            value={stats.total_faculty} 
-            colorClass="purple"
-            icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>}
-          />
-          <StatCard 
-            title="Active Sessions" 
-            value={stats.active_sessions} 
-            colorClass="green"
-            icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>}
-          />
+          <Link to="/admin/students">
+            <StatCard 
+              title="Total Students" 
+              value={stats.total_students} 
+              trend={12}
+              colorClass="blue"
+              icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>}
+            />
+          </Link>
+          <Link to="/admin/faculty">
+            <StatCard 
+              title="Total Faculty" 
+              value={stats.total_faculty} 
+              colorClass="purple"
+              icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>}
+            />
+          </Link>
+          <Link to="/admin/classrooms">
+            <StatCard 
+              title="Active Sessions" 
+              value={stats.active_sessions} 
+              colorClass="green"
+              icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>}
+            />
+          </Link>
           <StatCard 
             title="System Health" 
             value={stats.system_health} 
@@ -90,21 +97,21 @@ const AdminDashboard = () => {
 
         {/* Management Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-           <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white flex flex-col justify-between hover:scale-[1.02] transition-all cursor-pointer">
+           <Link to="/admin/students" className="bg-slate-900 p-8 rounded-[2.5rem] text-white flex flex-col justify-between hover:scale-[1.02] transition-all cursor-pointer">
               <h4 className="text-lg font-black tracking-tight mb-4 text-white/70">STUDENTS</h4>
               <p className="text-2xl font-black mb-6">Manage Enrollment</p>
               <button className="w-full py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl font-bold transition-all">Open Registry</button>
-           </div>
-           <div className="bg-brand-600 p-8 rounded-[2.5rem] text-white flex flex-col justify-between hover:scale-[1.02] transition-all cursor-pointer">
+           </Link>
+           <Link to="/admin/faculty" className="bg-brand-600 p-8 rounded-[2.5rem] text-white flex flex-col justify-between hover:scale-[1.02] transition-all cursor-pointer">
               <h4 className="text-lg font-black tracking-tight mb-4 text-white/70">FACULTY</h4>
               <p className="text-2xl font-black mb-6">Assign Subjects</p>
               <button className="w-full py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl font-bold transition-all">View Staff</button>
-           </div>
-           <div className="bg-purple-600 p-8 rounded-[2.5rem] text-white flex flex-col justify-between hover:scale-[1.02] transition-all cursor-pointer">
+           </Link>
+           <Link to="/admin/classrooms" className="bg-purple-600 p-8 rounded-[2.5rem] text-white flex flex-col justify-between hover:scale-[1.02] transition-all cursor-pointer">
               <h4 className="text-lg font-black tracking-tight mb-4 text-white/70">SESSIONS</h4>
               <p className="text-2xl font-black mb-6">Monitor Live</p>
               <button className="w-full py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl font-bold transition-all">Enter Control Panel</button>
-           </div>
+           </Link>
         </div>
       </div>
     </DashboardLayout>
