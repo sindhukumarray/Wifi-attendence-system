@@ -6,17 +6,24 @@ const useAdmin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
+  const [analyticsData, setAnalyticsData] = useState(null);
   const [students, setStudents] = useState([]);
   const [faculty, setFaculty] = useState([]);
-
   const [classrooms, setClassrooms] = useState([]);
 
   const fetchDashboard = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await adminApi.getDashboardStats();
-      if (response.data.success) {
-        setDashboardData(response.data.data);
+      const [statsRes, analyticsRes] = await Promise.all([
+        adminApi.getDashboardStats(),
+        adminApi.getAdminAnalytics()
+      ]);
+      
+      if (statsRes.data.success) {
+        setDashboardData(statsRes.data.data);
+      }
+      if (analyticsRes.data.success) {
+        setAnalyticsData(analyticsRes.data.data);
       }
     } catch (err) {
       toast.error('Failed to load system stats');
@@ -111,6 +118,7 @@ const useAdmin = () => {
     loading,
     error,
     dashboardData,
+    analyticsData,
     students,
     faculty,
     classrooms,

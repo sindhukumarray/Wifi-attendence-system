@@ -32,6 +32,19 @@ const analyticsController = {
       return sendError(res, error.message, 500);
     }
   },
+  
+  /**
+   * Get Admin Analytics Dashboard
+   */
+  getAdminDashboard: async (req, res) => {
+    try {
+      const stats = await analyticsService.getAdminStats();
+      return sendSuccess(res, 'Admin analytics fetched successfully', stats);
+    } catch (error) {
+      console.error('[Analytics Controller Error]:', error);
+      return sendError(res, error.message, 500);
+    }
+  },
 
   /**
    * Export Attendance Report (CSV)

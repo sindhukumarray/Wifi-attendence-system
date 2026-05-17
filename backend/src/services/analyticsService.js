@@ -103,6 +103,56 @@ const analyticsService = {
       },
       classroom_utilization: classrooms.rows
     };
+  },
+
+  /**
+   * Get comprehensive stats for admin charts
+   */
+  getAdminStats: async () => {
+    // 1. Attendance Volume Trend (Last 4 weeks)
+    const trendQuery = `
+      SELECT 
+        'Week ' || TO_CHAR(attendance_time, 'W') as name,
+        COUNT(*) as value
+      FROM attendance
+      WHERE attendance_time >= NOW() - INTERVAL '4 weeks'
+      GROUP BY TO_CHAR(attendance_time, 'W')
+      ORDER BY name ASC
+    `;
+
+    // 2. Department Participation (Mocking departments since we might only have subjects)
+    // Let's use subjects if departments table is not fully populated
+    const departmentQuery = `
+      SELECT 
+        COALESCE(d.department_name, 'Gen Ed') as name,
+        (COUNT(CASE WHEN a.status = 'present' THEN 1 END) * 100 / NULLIF(COUNT(*), 0)) as value
+      FROM subjects s
+      LEFT JOIN departments d ON s.department_id = d.id
+      LEFT JOIN sessions sess ON sess.subject_id = s.id
+      LEFT JOIN attendance a ON a.session_id = sess.id
+      GROUP BY d.department_name
+      LIMIT 4
+    `;
+
+    const [trends, departments] = await Promise.all([
+      pool.query(trendQuery),
+      pool.query(departmentQuery)
+    ]);
+
+    return {
+      trends: trends.rows.length > 0 ? trends.rows : [
+        { name: 'Week 1', value: 0 },
+        { name: 'Week 2', value: 0 },
+        { name: 'Week 3', value: 0 },
+        { name: 'Week 4', value: 0 }
+      ],
+      department_participation: departments.rows.length > 0 ? departments.rows : [
+        { name: 'CS', value: 0 },
+        { name: 'IT', value: 0 },
+        { name: 'EE', value: 0 },
+        { name: 'ME', value: 0 }
+      ]
+    };
   }
 };
 

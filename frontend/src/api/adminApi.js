@@ -3,6 +3,7 @@ import api from './axios';
 const adminApi = {
   // Stats
   getDashboardStats: () => api.get('/admin/stats'),
+  getAdminAnalytics: () => api.get('/analytics/admin'),
 
   // Students
   getAllStudents: (params) => api.get('/admin/students', { params }),

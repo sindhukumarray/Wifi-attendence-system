@@ -27,4 +27,12 @@ router.get(
   analyticsController.getFacultyDashboard
 );
 
+// Admin Analytics
+router.get(
+  '/admin', 
+  protect, 
+  authorizeRoles('admin'), 
+  analyticsController.getAdminDashboard
+);
+
 module.exports = router;

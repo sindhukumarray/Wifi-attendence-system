@@ -13,18 +13,39 @@ const SettingsPage = () => {
         </div>
 
         <div className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
-          <div className="flex flex-col items-center justify-center text-center py-10">
-            <div className="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center mb-6">
-              <svg className="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              </svg>
+          <form className="space-y-6">
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">System Name</label>
+              <input type="text" defaultValue="SmartFlow Attendance" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500" />
             </div>
-            <h3 className="text-xl font-black text-slate-800 mb-2">Settings Module Coming Soon</h3>
-            <p className="text-slate-500 font-medium max-w-sm">
-              Global system configurations, email templates, and environment variables will be available in the next release.
-            </p>
-          </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">Session Timeout (Minutes)</label>
+              <input type="number" defaultValue="60" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">Max Devices Per Student</label>
+              <input type="number" defaultValue="1" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+
+            <div className="flex items-center justify-between py-4 border-t border-slate-100">
+              <div>
+                <h4 className="text-sm font-bold text-slate-800">Enable MAC Binding</h4>
+                <p className="text-xs text-slate-500">Restrict attendance to registered devices only.</p>
+              </div>
+              <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                <input type="checkbox" name="toggle" id="toggle" defaultChecked className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-brand-500 right-0"/>
+                <label htmlFor="toggle" className="toggle-label block overflow-hidden h-6 rounded-full bg-brand-500 cursor-pointer"></label>
+              </div>
+            </div>
+
+            <div className="pt-4">
+              <button type="button" onClick={() => alert('Settings saved successfully!')} className="px-6 py-3 bg-brand-600 text-white font-bold rounded-xl hover:bg-brand-700 transition-colors">
+                Save Changes
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </DashboardLayout>

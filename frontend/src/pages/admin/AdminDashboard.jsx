@@ -8,7 +8,7 @@ import { TrendChart, ComparisonBarChart } from '../../components/analytics/Analy
 import Badge from '../../components/common/Badge';
 
 const AdminDashboard = () => {
-  const { dashboardData, fetchDashboard, loading } = useAdmin();
+  const { dashboardData, analyticsData, fetchDashboard, loading } = useAdmin();
 
   useEffect(() => {
     fetchDashboard();
@@ -69,21 +69,21 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-xl shadow-slate-200/50">
             <h3 className="text-xl font-black text-slate-900 tracking-tight mb-8">Attendance Volume Trend</h3>
-            <TrendChart data={[
-              { name: 'Week 1', value: 400 },
-              { name: 'Week 2', value: 300 },
-              { name: 'Week 3', value: 600 },
-              { name: 'Week 4', value: 800 },
+            <TrendChart data={analyticsData?.trends || [
+              { name: 'Week 1', value: 0 },
+              { name: 'Week 2', value: 0 },
+              { name: 'Week 3', value: 0 },
+              { name: 'Week 4', value: 0 },
             ]} />
           </div>
 
           <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-xl shadow-slate-200/50">
             <h3 className="text-xl font-black text-slate-900 tracking-tight mb-8">Department Participation</h3>
-            <ComparisonBarChart data={[
-              { name: 'CS', value: 95 },
-              { name: 'IT', value: 88 },
-              { name: 'EE', value: 72 },
-              { name: 'ME', value: 65 },
+            <ComparisonBarChart data={analyticsData?.department_participation || [
+              { name: 'CS', value: 0 },
+              { name: 'IT', value: 0 },
+              { name: 'EE', value: 0 },
+              { name: 'ME', value: 0 },
             ]} />
           </div>
         </div>
