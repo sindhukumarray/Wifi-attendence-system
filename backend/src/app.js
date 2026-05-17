@@ -4,7 +4,6 @@ const { errorHandler } = require('./middleware/errorMiddleware');
 const loggerMiddleware = require('./middleware/loggerMiddleware');
 
 const helmet = require('helmet');
-const xss = require('xss-clean');
 
 const { globalLimiter } = require('./security/securityConfig');
 
@@ -12,7 +11,6 @@ const app = express();
 
 // Security Middleware
 app.use(helmet());
-app.use(xss());
 
 app.use('/api', globalLimiter);
 
