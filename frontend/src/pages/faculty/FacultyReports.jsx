@@ -15,6 +15,40 @@ const FacultyReports = () => {
     fetchDashboard();
   }, [fetchDashboard]);
 
+  const handleExportPDF = () => {
+    window.print();
+  };
+
+  const handleExportExcel = () => {
+    if (!dashboardData?.recentSessions) {
+      alert('No data available to export');
+      return;
+    }
+    
+    const headers = ['Subject', 'Classroom', 'Date', 'Status'];
+    const rows = dashboardData.recentSessions.map(sess => [
+      sess.subject_name,
+      sess.room_name,
+      new Date(sess.start_time).toLocaleDateString(),
+      sess.is_active ? 'ACTIVE' : 'COMPLETED'
+    ]);
+    
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'faculty_report.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   useEffect(() => {
     if (dashboardData) {
       // Mock data for faculty analytics
@@ -51,11 +85,17 @@ const FacultyReports = () => {
             <p className="text-slate-500 font-medium mt-1">Global performance and classroom analytics</p>
           </div>
           <div className="flex items-center gap-3">
-             <button className="px-6 py-3 bg-slate-900 text-white font-black rounded-2xl hover:bg-slate-800 transition-all flex items-center gap-2">
+             <button 
+               onClick={handleExportPDF}
+               className="px-6 py-3 bg-slate-900 text-white font-black rounded-2xl hover:bg-slate-800 transition-all flex items-center gap-2"
+             >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 Export PDF
              </button>
-             <button className="px-6 py-3 bg-brand-600 text-white font-black rounded-2xl hover:bg-brand-700 transition-all flex items-center gap-2 shadow-lg shadow-brand-600/20">
+             <button 
+               onClick={handleExportExcel}
+               className="px-6 py-3 bg-brand-600 text-white font-black rounded-2xl hover:bg-brand-700 transition-all flex items-center gap-2 shadow-lg shadow-brand-600/20"
+             >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 17v-2a4 4 0 014-4h4m-4 4l4-4m-4 4l-4-4m12 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 Excel Report
              </button>

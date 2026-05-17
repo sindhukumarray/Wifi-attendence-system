@@ -62,8 +62,10 @@ const FacultyDashboard = () => {
                 <h3 className="text-xl font-black tracking-tight">Smart Suggestion</h3>
                 <p className="text-brand-100 font-medium">
                   {activeSession 
-                    ? `You are currently teaching ${activeSession.subject_name}. 12 students verified.` 
-                    : "It's 10:00 AM. Usually, you teach 'Web Development' now. Want to start?"}
+                    ? `You are currently teaching ${activeSession.subject_name}.` 
+                    : subjects.length > 0 
+                      ? `Ready to start your session? Usually you teach '${subjects[0].subject_name}'.`
+                      : "Ready to start your session? Select a subject and classroom."}
                 </p>
               </div>
             </div>
