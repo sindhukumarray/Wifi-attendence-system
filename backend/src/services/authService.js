@@ -48,12 +48,7 @@ const login = async (email, password, role) => {
     throw new Error('Invalid credentials');
   }
 
-  // 3. Check for Admin Approval (Students Only)
-  if (role === 'student' && user.is_approved === false) {
-    throw new Error('Your account is pending Administrator approval.');
-  }
-
-  // 4. Generate JWT Token
+  // 3. Generate JWT Token
   const token = generateToken(user.id, user.email, role);
 
   // Remove password from returned user object for security
