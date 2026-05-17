@@ -9,13 +9,7 @@ const { globalLimiter } = require('./security/securityConfig');
 
 const app = express();
 
-// Security Middleware
-app.use(helmet());
-
-app.use('/api', globalLimiter);
-
 // Middlewares
-app.use(loggerMiddleware);
 const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
 allowedOrigins.push('http://localhost:5173');
 
@@ -23,6 +17,12 @@ app.use(cors({
   origin: allowedOrigins,
   credentials: true
 }));
+
+// Security Middleware
+app.use(helmet());
+app.use('/api', globalLimiter);
+
+app.use(loggerMiddleware);
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
