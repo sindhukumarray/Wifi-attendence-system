@@ -125,7 +125,7 @@ const analyticsService = {
     const departmentQuery = `
       SELECT 
         COALESCE(d.department_name, 'Gen Ed') as name,
-        (COUNT(CASE WHEN a.status = 'present' THEN 1 END) * 100 / NULLIF(COUNT(*), 0)) as value
+        (COUNT(CASE WHEN a.status = 'Present' THEN 1 END) * 100 / NULLIF(COUNT(*), 0)) as value
       FROM subjects s
       LEFT JOIN departments d ON s.department_id = d.id
       LEFT JOIN sessions sess ON sess.subject_id = s.id

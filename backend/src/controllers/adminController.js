@@ -17,7 +17,7 @@ const adminController = {
         SELECT COUNT(DISTINCT a.student_id) as present_today
         FROM attendance a
         JOIN sessions s ON a.session_id = s.id
-        WHERE DATE(s.start_time) = CURRENT_DATE AND a.status = 'present'
+        WHERE DATE(s.start_time) = CURRENT_DATE AND a.status = 'Present'
       `);
       const presentToday = parseInt(presentTodayResult.rows[0].present_today) || 0;
 
